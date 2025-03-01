@@ -121,7 +121,12 @@ const RentedUnitsReport = () => {
     reportData.forEach((property) => {
       // Add property owner details
       csvRows.push(["تفاصيل المالك"]);
-      csvRows.push(["اسم المالك", "هوية المالك", "ايميل المالك", "رقم هاتف المالك"]);
+      csvRows.push([
+        "اسم المالك",
+        "هوية المالك",
+        "ايميل المالك",
+        "رقم هاتف المالك",
+      ]);
       csvRows.push([
         property.client?.name || "",
         property.client?.nationalId || "",
@@ -167,11 +172,16 @@ const RentedUnitsReport = () => {
     const csvContent = csvRows.map((row) => row.join(",")).join("\n");
 
     // Create blob and download
-    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob(["\ufeff" + csvContent], {
+      type: "text/csv;charset=utf-8;",
+    });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `تقرير_الوحدات_المؤجرة_${dayjs().format("YYYY-MM-DD")}.csv`);
+    link.setAttribute(
+      "download",
+      `تقرير_الوحدات_المؤجرة_${dayjs().format("YYYY-MM-DD")}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -270,7 +280,11 @@ const RentedUnitsReport = () => {
             <Button variant="contained" color="secondary" onClick={handlePrint}>
               طباعة التقرير
             </Button>
-            <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDownloadCSV}
+            >
               تحميل CSV
             </Button>
           </Stack>

@@ -1,8 +1,8 @@
-import {createHandler} from "@/app/api/handler";
-import {getCurrentMonthOtherPayments} from "@/services/server/main";
+import { createHandler } from "@/app/api/handler";
+import { getCurrentMonthOtherPayments } from "@/services/server/main";
 
 const handler = createHandler({
-    getService: getCurrentMonthOtherPayments,
+  getService: getCurrentMonthOtherPayments,
 });
 
 export const GET = handler.GET;

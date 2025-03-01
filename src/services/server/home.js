@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import {updateWhereClauseWithUserProperties} from "@/app/api/utlis/userProperties";
+import { updateWhereClauseWithUserProperties } from "@/app/api/utlis/userProperties";
 
 // export async function getTotalExpenses(page, limit, searchParams) {
 //     const propertyId = searchParams.get("propertyId");
@@ -19,28 +19,31 @@ import {updateWhereClauseWithUserProperties} from "@/app/api/utlis/userPropertie
 // }
 
 export async function getTotalIncome(page, limit, searchParams) {
-    const propertyId = searchParams.get("propertyId");
-    console.log(propertyId, "propertyId")
-    let whereClause = {
-        invoice: {
-            rentAgreement: {
-                status: "ACTIVE",
-            },
-        },
-    };
-    if (propertyId && propertyId !== "all") {
-        whereClause.propertyId = parseInt(propertyId, 10);
-    }
-    if (!propertyId || propertyId === "all") {
-        whereClause = await updateWhereClauseWithUserProperties("propertyId", whereClause);
-    }
-    console.log(whereClause, "whereClause")
-    const income = await prisma.income.findMany({where: whereClause});
-    const total = income.reduce((sum, inc) => sum + inc.amount, 0);
+  const propertyId = searchParams.get("propertyId");
+  console.log(propertyId, "propertyId");
+  let whereClause = {
+    invoice: {
+      rentAgreement: {
+        status: "ACTIVE",
+      },
+    },
+  };
+  if (propertyId && propertyId !== "all") {
+    whereClause.propertyId = parseInt(propertyId, 10);
+  }
+  if (!propertyId || propertyId === "all") {
+    whereClause = await updateWhereClauseWithUserProperties(
+      "propertyId",
+      whereClause,
+    );
+  }
+  console.log(whereClause, "whereClause");
+  const income = await prisma.income.findMany({ where: whereClause });
+  const total = income.reduce((sum, inc) => sum + inc.amount, 0);
 
-    return {
-        data: total,
-    };
+  return {
+    data: total,
+  };
 }
 
 // export async function getIncome(page, limit, searchParams, params) {
@@ -108,139 +111,145 @@ export async function getTotalIncome(page, limit, searchParams) {
 // }
 
 export async function getRentedUnits(page, limit, searchParams, params) {
-    const propertyId = searchParams.get("propertyId");
-    const whereClause = {rentAgreements: {some: {status: "ACTIVE"}}};
+  const propertyId = searchParams.get("propertyId");
+  const whereClause = { rentAgreements: { some: { status: "ACTIVE" } } };
 
-    if (propertyId && propertyId !== "all") {
-        whereClause.propertyId = parseInt(propertyId, 10);
-    }
+  if (propertyId && propertyId !== "all") {
+    whereClause.propertyId = parseInt(propertyId, 10);
+  }
 
-    const units = await prisma.unit.findMany({where: whereClause});
-    return {
-        data: units,
-    };
+  const units = await prisma.unit.findMany({ where: whereClause });
+  return {
+    data: units,
+  };
 }
 
 export async function getNonRentedUnits(page, limit, searchParams, params) {
-    const propertyId = searchParams.get("propertyId");
-    const whereClause = {rentAgreements: {none: {status: "ACTIVE"}}};
+  const propertyId = searchParams.get("propertyId");
+  const whereClause = { rentAgreements: { none: { status: "ACTIVE" } } };
 
-    if (propertyId && propertyId !== "all") {
-        whereClause.propertyId = parseInt(propertyId, 10);
-    }
+  if (propertyId && propertyId !== "all") {
+    whereClause.propertyId = parseInt(propertyId, 10);
+  }
 
-    const units = await prisma.unit.findMany({where: whereClause});
+  const units = await prisma.unit.findMany({ where: whereClause });
 
-    return {
-        data: units,
-    };
+  return {
+    data: units,
+  };
 }
 
 export async function getPayments(page, limit, searchParams, params) {
-    const currentMonthStart = new Date(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          1,
-    );
-    const currentMonthEnd = new Date(
-          new Date().getFullYear(),
-          new Date().getMonth() + 1,
-          0,
-    );
+  const currentMonthStart = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1,
+  );
+  const currentMonthEnd = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    0,
+  );
 
-    const propertyId = searchParams.get("propertyId");
-    const invoiceWhereClause = {
-        createdAt: {
-            gte: currentMonthStart,
-            lte: currentMonthEnd,
-        },
-    };
+  const propertyId = searchParams.get("propertyId");
+  const invoiceWhereClause = {
+    createdAt: {
+      gte: currentMonthStart,
+      lte: currentMonthEnd,
+    },
+  };
 
-    if (propertyId && propertyId !== "all") {
-        invoiceWhereClause.propertyId = parseInt(propertyId, 10);
-    }
+  if (propertyId && propertyId !== "all") {
+    invoiceWhereClause.propertyId = parseInt(propertyId, 10);
+  }
 
-    const invoices = await prisma.invoice.findMany({
-        where: invoiceWhereClause,
+  const invoices = await prisma.invoice.findMany({
+    where: invoiceWhereClause,
+    select: {
+      paymentId: true,
+      createdAt: true,
+    },
+  });
+
+  const paymentIds = invoices.map((invoice) => invoice.paymentId);
+  const payments = await prisma.payment.findMany({
+    where: {
+      id: { in: paymentIds },
+    },
+    select: {
+      id: true,
+      amount: true,
+      paidAmount: true,
+      dueDate: true,
+      paymentType: true,
+      property: {
         select: {
-            paymentId: true,
-            createdAt: true,
+          name: true,
         },
-    });
-
-    const paymentIds = invoices.map((invoice) => invoice.paymentId);
-    const payments = await prisma.payment.findMany({
-        where: {
-            id: {in: paymentIds},
-        },
+      },
+      unit: {
         select: {
-            id: true,
-            amount: true,
-            paidAmount: true,
-            dueDate: true,
-            paymentType: true,
-            property: {
-                select: {
-                    name: true,
-                },
-            },
-            unit: {
-                select: {
-                    number: true,
-                },
-            },
-            rentAgreement: {
-                select: {
-                    rentAgreementNumber: true,
-                },
-            },
+          number: true,
         },
-    });
+      },
+      rentAgreement: {
+        select: {
+          rentAgreementNumber: true,
+        },
+      },
+    },
+  });
 
-    const categorizedPayments = payments.map((payment) => {
-        const invoice = invoices.find((inv) => inv.paymentId === payment.id);
+  const categorizedPayments = payments.map((payment) => {
+    const invoice = invoices.find((inv) => inv.paymentId === payment.id);
 
-        const paymentDueDate = new Date(payment.dueDate);
-        const invoiceCreatedDate = new Date(invoice.createdAt);
+    const paymentDueDate = new Date(payment.dueDate);
+    const invoiceCreatedDate = new Date(invoice.createdAt);
 
-        const isSameDay =
-              paymentDueDate.getDate() === invoiceCreatedDate.getDate() &&
-              paymentDueDate.getMonth() === invoiceCreatedDate.getMonth() &&
-              paymentDueDate.getFullYear() === invoiceCreatedDate.getFullYear();
+    const isSameDay =
+      paymentDueDate.getDate() === invoiceCreatedDate.getDate() &&
+      paymentDueDate.getMonth() === invoiceCreatedDate.getMonth() &&
+      paymentDueDate.getFullYear() === invoiceCreatedDate.getFullYear();
 
-        const paymentStatus = isSameDay ? "PAID_ON_TIME" : "PAID_LATE";
-
-        return {
-            ...payment,
-            status: paymentStatus,
-        };
-    });
+    const paymentStatus = isSameDay ? "PAID_ON_TIME" : "PAID_LATE";
 
     return {
-        data: categorizedPayments,
+      ...payment,
+      status: paymentStatus,
     };
+  });
+
+  return {
+    data: categorizedPayments,
+  };
 }
 
 export async function getRentPayments(searchParams) {
-    const propertyId = searchParams.get("propertyId");
+  const propertyId = searchParams.get("propertyId");
 
-    const whereClause = {
-        paymentType: "RENT"
-    };
+  const whereClause = {
+    paymentType: "RENT",
+  };
 
-    if (propertyId && propertyId !== "all") {
-        whereClause.propertyId = parseInt(propertyId, 10);
-    }
+  if (propertyId && propertyId !== "all") {
+    whereClause.propertyId = parseInt(propertyId, 10);
+  }
 
-    const payments = await prisma.payment.findMany({where: whereClause});
+  const payments = await prisma.payment.findMany({ where: whereClause });
 
-    const totalAmount = payments.reduce((sum, payment) => sum + payment.amount, 0);
-    const totalPaidAmount = payments.reduce((sum, payment) => sum + payment.paidAmount, 0);
-    const totalRemainingAmount = totalAmount - totalPaidAmount;
+  const totalAmount = payments.reduce(
+    (sum, payment) => sum + payment.amount,
+    0,
+  );
+  const totalPaidAmount = payments.reduce(
+    (sum, payment) => sum + payment.paidAmount,
+    0,
+  );
+  const totalRemainingAmount = totalAmount - totalPaidAmount;
 
-    return {
-        totalAmount,
-        totalPaidAmount,
-        totalRemainingAmount
-    };
+  return {
+    totalAmount,
+    totalPaidAmount,
+    totalRemainingAmount,
+  };
 }

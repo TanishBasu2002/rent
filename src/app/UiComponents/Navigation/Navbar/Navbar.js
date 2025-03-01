@@ -74,7 +74,7 @@ export default function DashboardNav({ children }) {
       setLoading,
       `auth/signout`,
       false,
-      "جاري تسجيل الخروج"
+      "جاري تسجيل الخروج",
     );
     if (signout?.status === 200) {
       router.push("/login");
@@ -107,7 +107,7 @@ export default function DashboardNav({ children }) {
   }, {});
 
   const filteredNavItems = navItems.filter(
-    (item) => userPrivileges[item.area]?.canRead
+    (item) => userPrivileges[item.area]?.canRead,
   );
 
   const drawerContent = (

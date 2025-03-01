@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Next.js application
@@ -35,7 +35,17 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-ppassword"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "user",
+          "-ppassword",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

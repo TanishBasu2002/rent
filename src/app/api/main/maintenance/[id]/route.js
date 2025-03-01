@@ -2,7 +2,8 @@ import { createHandler } from "@/app/api/handler";
 
 import {
   deleteMaintenance,
-  getMaintenanceById, updateMaintenance,
+  getMaintenanceById,
+  updateMaintenance,
 } from "@/services/server/maintenance";
 
 const handler = createHandler({

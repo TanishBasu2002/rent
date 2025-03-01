@@ -37,7 +37,8 @@ export const collectorInputs = [
         lg: "48%",
       },
     },
-  }, {
+  },
+  {
     data: {
       id: "nationalId",
       type: "text",
