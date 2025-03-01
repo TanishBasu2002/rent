@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Production override for Next.js application
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mysql://user:password@mysql:3306/nextapp
+    restart: always
+    # Remove development-specific volumes
+    volumes: []
+
+  # MySQL Configuration remains similar for production
+  mysql:
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-nextapp}
+      - MYSQL_USER=${MYSQL_USER:-user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-password}
+
+  # In production, we might use a different admin tool or secure Adminer
+  adminer:
+    restart: always
+    # Optionally add authentication proxy or restrict access in production
