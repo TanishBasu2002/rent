@@ -82,13 +82,14 @@ export async function submitMaintenanceContract(data, setLoading) {
   nextDay.setDate(endDate.getDate() + 1);
   const nextMonth = endDate.getMonth() === 11 ? 0 : endDate.getMonth() + 1;
 
-  const isEndDateLastDay = nextDay.getDate() === 1 && nextDay.getMonth() === nextMonth;
-  if (isStartDateFirstDay&&isEndDateLastDay) {
+  const isEndDateLastDay =
+    nextDay.getDate() === 1 && nextDay.getMonth() === nextMonth;
+  if (isStartDateFirstDay && isEndDateLastDay) {
     endDate = nextDay;
   }
   const monthDifference =
-        (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-        (endDate.getMonth() - startDate.getMonth());
+    (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+    (endDate.getMonth() - startDate.getMonth());
   const id = toast.loading("يتم مراجعة البيانات...");
 
   if (

@@ -1,9 +1,9 @@
-import {assignPropertiesToUser} from "@/services/server/settings";
+import { assignPropertiesToUser } from "@/services/server/settings";
 
-import {createHandler} from "@/app/api/handler";
+import { createHandler } from "@/app/api/handler";
 
 const handler = createHandler({
-    putService: assignPropertiesToUser,
+  putService: assignPropertiesToUser,
 });
 
 export const PUT = handler.PUT;

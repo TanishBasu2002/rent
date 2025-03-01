@@ -82,7 +82,7 @@ const Dashboard = () => {
       try {
         const res = await fetch("/api/fast-handler?id=properties");
         const data = await res.json();
-        setProperties(data|| []);
+        setProperties(data || []);
       } catch (error) {
         console.error("Failed to fetch properties", error);
       }
@@ -116,7 +116,7 @@ const Dashboard = () => {
         const propertyParam =
           selectedProperty !== "all" ? `propertyId=${selectedProperty}` : "";
         const res = await fetch(
-          `/api/main/home/rentAgreements?${propertyParam}`
+          `/api/main/home/rentAgreements?${propertyParam}`,
         );
         const data = await res.json();
         setAgreements(data);
@@ -172,7 +172,7 @@ const Dashboard = () => {
         const propertyParam =
           selectedProperty !== "all" ? `propertyId=${selectedProperty}` : "";
         const res = await fetch(
-          `/api/main/home/totalExpences?${propertyParam}`
+          `/api/main/home/totalExpences?${propertyParam}`,
         );
         const data = await res.json();
         setMaintenancePayments(data);
@@ -192,14 +192,14 @@ const Dashboard = () => {
         const propertyParam =
           selectedProperty !== "all" ? `propertyId=${selectedProperty}` : "";
         const res = await fetch(
-          `/api/main/home/currentMonthMaintenancePayments?${propertyParam}`
+          `/api/main/home/currentMonthMaintenancePayments?${propertyParam}`,
         );
         const data = await res.json();
         setCurrentMonthMaintenancePayments(data);
       } catch (error) {
         console.error(
           "Failed to fetch current month maintenance payments",
-          error
+          error,
         );
       }
       setLoadingCurrentMonthMaintenancePayments(false);
@@ -215,7 +215,7 @@ const Dashboard = () => {
         const propertyParam =
           selectedProperty !== "all" ? `propertyId=${selectedProperty}` : "";
         const res = await fetch(
-          `/api/main/home/otherPayments?${propertyParam}`
+          `/api/main/home/otherPayments?${propertyParam}`,
         );
         const data = await res.json();
         setOtherPayments(data);
@@ -235,7 +235,7 @@ const Dashboard = () => {
         const propertyParam =
           selectedProperty !== "all" ? `propertyId=${selectedProperty}` : "";
         const res = await fetch(
-          `/api/main/home/currentMonthOtherPayments?${propertyParam}`
+          `/api/main/home/currentMonthOtherPayments?${propertyParam}`,
         );
         const data = await res.json();
         setCurrentMonthOtherPayments(data);
@@ -485,13 +485,13 @@ const Dashboard = () => {
                 ]}
                 values={[
                   formatCurrencyAED(
-                    currentMonthMaintenancePayments.totalAmount
+                    currentMonthMaintenancePayments.totalAmount,
                   ),
                   formatCurrencyAED(
-                    currentMonthMaintenancePayments.totalPaidAmount
+                    currentMonthMaintenancePayments.totalPaidAmount,
                   ),
                   formatCurrencyAED(
-                    currentMonthMaintenancePayments.totalRemainingAmount
+                    currentMonthMaintenancePayments.totalRemainingAmount,
                   ),
                 ]}
                 loading={loadingCurrentMonthMaintenancePayments}
@@ -525,7 +525,7 @@ const Dashboard = () => {
                   formatCurrencyAED(currentMonthOtherPayments.totalAmount),
                   formatCurrencyAED(currentMonthOtherPayments.totalPaidAmount),
                   formatCurrencyAED(
-                    currentMonthOtherPayments.totalRemainingAmount
+                    currentMonthOtherPayments.totalRemainingAmount,
                   ),
                 ]}
                 loading={loadingCurrentMonthOtherPayments}

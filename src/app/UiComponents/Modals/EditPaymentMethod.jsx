@@ -20,7 +20,7 @@ const EditPaymentMethodModal = ({
   currentMethod,
   currentChequeNumber,
   onSave,
-                                  item
+  item,
 }) => {
   const [paymentMethod, setPaymentMethod] = useState(currentMethod);
   const [chequeNumber, setChequeNumber] = useState(currentChequeNumber);
@@ -36,8 +36,8 @@ const EditPaymentMethodModal = ({
       data,
       setSubmitLoading,
       `/main/payments/${paymentId}/edit`,
-          false,
-          "جاري تحديث  طريقة الدفع"
+      false,
+      "جاري تحديث  طريقة الدفع",
     );
 
     if (updatedPayment) {

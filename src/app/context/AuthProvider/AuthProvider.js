@@ -21,9 +21,9 @@ export default function AuthProvider({ children }) {
       const result = await response.json();
 
       if (result.auth === false) {
-        if(pathName === "/reset-password" || pathName === "/forgot-password") {
+        if (pathName === "/reset-password" || pathName === "/forgot-password") {
           toast.update(toastId, Failed("بامكانك متابعة العملية"));
-            return;
+          return;
         }
         router.push("/login");
         toast.update(toastId, Failed("غير مصرح. جاري التوجيه"));
